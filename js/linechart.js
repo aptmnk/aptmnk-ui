@@ -2394,36 +2394,35 @@ function setupLineChart(selector, xValues, yValues) {
 
   });
 
-  var xValues = [];
-  allData.forEach(function(d) {
-      xValues = xValues.concat(_.map(d, 'date').map(function(date) {return new Date(date); }));
-  });
+  function drawChart(chartData) {
 
-  var yValues = [];
-  allData.forEach(function(d) {
-      yValues = yValues.concat(_.map(d, 'avg_price'));
-  });
+        var xValues = _.map(chartData, 'date').map(function(date) {return new Date(date); });
 
-  var lineChart = setupLineChart('#linechart', xValues, yValues);
+        var yValues = _.map(chartData, 'avg_price');
 
+        var lineChart = setupLineChart('#linechart', xValues, yValues);
 
-  allData.forEach(function(data) {
-        var line = d3.svg.line()
-            .x(function(d) { return lineChart.x(d.date); })
-            .y(function(d) { return lineChart.y(d.avg_price); });
+              var line = d3.svg.line()
+                  .x(function(d) { return lineChart.x(d.date); })
+                  .y(function(d) { return lineChart.y(d.avg_price); });
 
-        lineChart.svg.append("path")
-                  .datum(data)
-                  .attr("class", "line")
-                  .attr("d", line);
+              lineChart.svg.append("path")
+                        .datum(chartData)
+                        .attr("class", "line")
+                        .attr("d", line);
 
 
-                  var labelX = (lineChart.width/2);
-                  var labelY = lineChart.y(data[0].avg_price) - 13;
-      lineChart.svg.append("text")
-  		.attr("transform", "translate(" + labelX + "," + labelY + ")")
-  		.attr("dy", ".35em")
-  		.attr("text-anchor", "start")
-  		.style("fill", "gray")
-  		.text(data[0].bed + " bed");
-  });
+                        var labelX = (lineChart.width/2);
+                        var labelY = lineChart.y(chartData[0].avg_price) - 13;
+            lineChart.svg.append("text")
+        		.attr("transform", "translate(" + labelX + "," + labelY + ")")
+        		.attr("dy", ".35em")
+        		.attr("text-anchor", "start")
+        		.style("fill", "gray")
+        		.text(chartData[0].bed + " bed");
+
+  }
+
+  drawChart(allData[0])
+  drawChart(allData[1])
+  drawChart(allData[2])
